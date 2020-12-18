@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-
+from typing import Optional
 
 class QueryTerm(BaseModel):
     # the term to match against
@@ -11,10 +11,10 @@ class QueryTerm(BaseModel):
 
 
 class Contact(BaseModel):
-    name: str
-    phone: str
-    email: str
-    address: str
+    name: Optional[str]
+    phone: Optional[str]
+    email: Optional[str]
+    address: Optional[str]
 
 
 class ContactWithKey(Contact):
@@ -31,3 +31,7 @@ class Revision(BaseModel):
 
     revisionTimestamp: str
     revisionNumber: int
+
+
+class HistoricalContact(Revision):
+    revision: Contact
