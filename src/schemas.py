@@ -1,11 +1,12 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, root_validator
 from typing import Optional
+
 
 class QueryTerm(BaseModel):
     # the term to match against
     term: str
-    # whether to search for the lack of this term, instead of its presence
-    invert: bool = False
+    # whether to match when the field string contains `term`, instead of looking for an exact match
+    fuzzy: bool = False
     # which field in the record to match against
     field: str
 
@@ -16,17 +17,25 @@ class Contact(BaseModel):
     email: Optional[str]
     address: Optional[str]
 
+    @root_validator
+    def check_not_empty(cls, fields):
+        """
+        At least 1 field must be truthy.
+        """
+        assert any(
+            fields.values()
+        ), "At least 1 field must not be None/null, and not empty"
+        return fields
 
-class ContactWithKey(Contact):
+
+class ContactWithMeta(Contact):
     key: int
-
-    class Config:
-        orm_mode = True
+    hash: str
 
 
 class Revision(BaseModel):
     """
-    This is the form of pysirix.types.SubtreeRevision
+    This schema is of the form of pysirix.types.SubtreeRevision
     """
 
     revisionTimestamp: str
@@ -34,4 +43,8 @@ class Revision(BaseModel):
 
 
 class HistoricalContact(Revision):
+    """
+    This schema is of the form of pysirix.types.QueryResult
+    """
+
     revision: Contact
