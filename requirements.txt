@@ -11,7 +11,7 @@ httpx==0.16.1
 hyperframe==5.2.0
 idna==2.10
 pydantic==1.7.3
-pysirix==0.3.3
+pysirix==0.4.0
 rfc3986==1.4.0
 sniffio==1.2.0
 starlette==0.13.6
